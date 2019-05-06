@@ -1,26 +1,25 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
-library(shiny)
 
-# Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+# Load the ggplot2 package which provides
+# the 'mpg' dataset.
+library(ggplot2)
 
-    output$distPlot <- renderPlot({
+function(input, output) {
+    
+    # Filter data based on selections
+    output$table <- DT::renderDataTable(DT::datatable({
+        data <- mpg
+        if (input$man != "All") {
+            data <- data[data$manufacturer == input$man,]
+        }
+        if (input$cyl != "All") {
+            data <- data[data$cyl == input$cyl,]
+        }
+        if (input$trans != "All") {
+            data <- data[data$trans == input$trans,]
+        }
+        data
+    }))
+    
+}
 
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkblue', border = 'white',main="probamos shiny")
-
-    })
-
-})

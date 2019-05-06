@@ -1,33 +1,34 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
-library(shiny)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
+# Load the ggplot2 package which provides
+# the 'mpg' dataset.
+library(ggplot2)
 
-    # Application title
-    titlePanel("Datos del geiser ese de R"),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number grupos:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+fluidPage(
+    titlePanel("Basic DataTable"),
+    
+    # Create a new Row in the UI for selectInputs
+    fluidRow(
+        column(4,
+               selectInput("man",
+                           "Manufacturer:",
+                           c("All",
+                             unique(as.character(mpg$manufacturer))))
         ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
+        column(4,
+               selectInput("trans",
+                           "Transmission:",
+                           c("All",
+                             unique(as.character(mpg$trans))))
+        ),
+        column(4,
+               selectInput("cyl",
+                           "Cylinders:",
+                           c("All",
+                             unique(as.character(mpg$cyl))))
         )
-    )
-))
+    ),
+    # Create a new row for the table.
+    DT::dataTableOutput("table")
+)
+
